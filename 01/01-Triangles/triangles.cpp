@@ -1,11 +1,16 @@
 // triangles.cpp
 // my first opengl Program!!
+//
+// It passes compilation, but generates RUNTIME ERROR in the form of segmentation fault.
+// I am QUITE sure the error generates at the beginning of init()
 
 #include <iostream>
 
 #include "vgl.h"
 #include "LoadShaders.h"
 
+// please someone tell me the use of those enumerations.
+// The red book(8th edition) says these are *Global Variables*.
 enum VAO_IDs {Triangles, NumVAOs};
 enum Buffer_IDs {ArrayBuffer, NumBuffers};
 enum Attrib_IDs {vPosition = 0};
@@ -27,7 +32,7 @@ init() {
 		{ -0.90, -0.90 }, // Triangle 1
 		{  0.85, -0.90 },
 		{ -0.90,  0.85 },
-		{  0.90, -0.85 },
+		{  0.90, -0.85 }, // Triangle 2
 		{  0.90,  0.90 },
 		{ -0.85,  0.90 }
 	};
