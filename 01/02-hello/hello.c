@@ -1,5 +1,6 @@
-#include <GL/gl.h>
-#include <GL/glut.h>
+
+#include <OpenGL/gl.h>
+#include <GLUT/glut.h>
 
 void display() {
 	// clear all pixels

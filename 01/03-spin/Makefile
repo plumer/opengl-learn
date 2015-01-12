@@ -1,6 +1,6 @@
 CC = gcc
 
-LDFLAGS = -lGL -lGLU -lGLEW -lglut
+LDFLAGS = -framework OpenGL -framework GLUT
 CFILES = $(shell find . -name "*.c")
 
 double: $(CFILES)

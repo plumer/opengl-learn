@@ -80,6 +80,7 @@ main(int argc, char ** argv) {
 	glutInitContextProfile(GLUT_CORE_PROFILE);
 	glutCreateWindow(argv[0]);
 
+	glewExperimental = GL_TRUE;
 	if (glewInit()) {
 		std::cerr << "Unable to initize GLEW .. exiting" << std::endl;
 		exit(EXIT_FAILURE);
