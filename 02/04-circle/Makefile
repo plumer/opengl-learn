@@ -1,16 +1,16 @@
 CC = gcc
 
-LDFLAGS = -lGL -lGLU -lglut
+LDFLAGS = -lm -lGL -lGLU -lglut
 DarwinLDFLAGS = -framework OpenGL -framework GLUT
 CFILES = $(shell find . -name "*.c")
 
-double: $(CFILES)
-	$(CC) $(CFILES) $(LDFLAGS) -o double
+circle: $(CFILES)
+	$(CC) $(CFILES) $(LDFLAGS) -o circle
 
 .PHONY: run clean
 
 run:
-	./double
+	./circle
 
 clean:
-	rm ./double
+	rm ./circle

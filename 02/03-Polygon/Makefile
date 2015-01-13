@@ -4,13 +4,13 @@ LDFLAGS = -lGL -lGLU -lglut
 DarwinLDFLAGS = -framework OpenGL -framework GLUT
 CFILES = $(shell find . -name "*.c")
 
-double: $(CFILES)
-	$(CC) $(CFILES) $(LDFLAGS) -o double
+polygon: $(CFILES)
+	$(CC) $(CFILES) $(LDFLAGS) -o polygon
 
 .PHONY: run clean
 
 run:
-	./double
+	./polygon
 
 clean:
-	rm ./double
+	rm ./polygon
