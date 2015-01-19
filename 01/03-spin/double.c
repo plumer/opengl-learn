@@ -3,6 +3,7 @@
 #include <GL/glut.h>
 
 #include <stdlib.h>
+#include <unistd.h>
 
 static GLfloat spin = 0.0;
 
@@ -19,10 +20,11 @@ void display() {
 	glRectf(-25.0, -25.0, 25.0, 25.0);
 	glPopMatrix();	// what is this?
 	glutSwapBuffers();
+	usleep(20000);
 }
 
 void spinDisplay() {
-	spin += 0.1;
+	spin += 2.0;
 	if (spin > 360.0)
 		spin -= 360.0;
 	glutPostRedisplay();
@@ -43,7 +45,7 @@ void mouse(int button, int state, int x, int y) {
 			if (state == GLUT_DOWN)
 				glutIdleFunc(spinDisplay);
 			break;
-		case GLUT_MIDDLE_BUTTON:
+		case GLUT_RIGHT_BUTTON:
 			if (state == GLUT_DOWN)
 				glutIdleFunc(NULL);
 			break;

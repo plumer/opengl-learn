@@ -7,7 +7,7 @@
 #ifndef __LOAD_SHADERS_H__
 #define __LOAD_SHADERS_H__
 
-#include <OpenGL/gl.h>
+#include <GL/gl.h>
 
 #ifdef __cplusplus
 extern "C" {
