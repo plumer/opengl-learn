@@ -7,7 +7,7 @@ $(TARGET): triangles.cpp LoadShaders.cpp
 
 .PHONY: run clean
 
-run: $(TARGET)
+run:
 	./$(TARGET)
 
 clean:

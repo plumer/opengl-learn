@@ -14,7 +14,7 @@ void display() {
 	glClear(GL_COLOR_BUFFER_BIT);
 
 	const double PI = 3.14159265358979;
-	GLint circlePoints = 96;
+	GLint circlePoints = 128;
 	glColor3f(1.0, 1.0, 1.0);
 	glBegin(GL_POLYGON);
 		int i;

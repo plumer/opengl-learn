@@ -25,37 +25,44 @@ const GLuint NumVertices = 6;
 
 void
 init() {
-	glGenVertexArrays(NumVAOs, VAOs);
-	glBindVertexArray(VAOs[Triangles]);
-	
-	std::cout << "NumVAOs = " << NumVAOs << '\n';
-
-	GLfloat vertices[NumVertices][2] = {
-		{ -0.90, -0.90 }, // Triangle 1
-		{  0.85, -0.90 },
-		{ -0.90,  0.85 },
-		{  0.90, -0.85 }, // Triangle 2
-		{  0.90,  0.90 },
-		{ -0.85,  0.90 }
+	GLuint ebo[1];
+	GLuint vao[1];
+	GLuint vbo[1];
+	static const GLfloat vertex_positions[] = {
+		-1.0f, -1.0f, 0.0f, 1.0f,
+		 1.0f, -1.0f, 0.0f, 1.0f,
+		-1.0f,  1.0f, 0.0f, 1.0f,
+		-1.0f, -1.0f, 0.0f, 1.0f
 	};
 
-	glGenBuffers(NumBuffers, Buffers);
-	glBindBuffer(GL_ARRAY_BUFFER, Buffers[ArrayBuffer]);
-	glBufferData(GL_ARRAY_BUFFER, sizeof(vertices),
-					vertices, GL_STATIC_DRAW);
-	
-	ShaderInfo shaders[] = {
-		{GL_VERTEX_SHADER, "triangles.vert"},
-		{GL_FRAGMENT_SHADER, "triangles.frag"},
-		{GL_NONE, NULL}
+	static const GLfloat vertex_colors[] = {
+		1.0f, 1.0f, 1.0f, 1.0f,
+		1.0f, 1.0f, 0.0f, 1.0f,
+		1.0f, 0.0f, 1.0f, 1.0f,
+		0.0f, 1.0f, 1.0f, 1.0f
 	};
 
-	GLuint program = LoadShaders(shaders);
-	glUseProgram(program);
+	static const GLushort vertex_indices[] = {0, 1, 2};
 
-	glVertexAttribPointer(vPosition, 2, GL_FLOAT, GL_FALSE, 0, BUFFER_OFFSET(0));
-	glEnableVertexAttribArray(vPosition);
+	glGenBuffers(1, ebo);
+	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, ebo[0]);
+	glBufferData(GL_ELEMENT_ARRAY_BUFFER,
+			sizeof(vertex_indices), vertex_indices, GL_STATIC_DRAW);
+
+	glGenVertexArrays(1, vao);
+	glBindVertexArray(vao[0]);
+
+	glGenBuffers(1, vbo);
+	glBindBuffer(GL_ARRAY_BUFFER, vbo[0]);
+	glBufferData(GL_ARRAY_BUFFER,
+			sizeof(vertex_positions) + sizeof(vertex_colors),
+			NULL, GL_STATIC_DRAW);
+	glBufferSubData(GL_ARRAY_BUFFER, 0,
+			sizeof(vertex_positions), vertex_positions);
+	glBufferSubData(GL_ARRAY_BUFFER, sizeof(vertex_positions),
+			sizeof(vertex_colors), vertex_colors);
 }
+
 
 // -----------------------------------------------
 //   display
@@ -66,6 +73,8 @@ display() {
 
 	glBindVertexArray(VAOs[Triangles]);
 	glDrawArrays(GL_TRIANGLES, 0, NumVertices);
+
+	model_matrix = vmath::translation(-3.0f, 0.0f, -5.0f);
 
 	glFlush();
 }
