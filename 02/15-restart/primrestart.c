@@ -22,7 +22,7 @@ init() {
 	GLuint	vbo, ebo, cbo;
 	GLfloat	*vertices;
 	GLushort *indices;
-	GLfloat colors[3*NumPoints*sizeof(GLfloat)];
+	GLfloat *colors;
 
 	/* Set up vertex data */
 	glGenBuffers(1, &vbo);
@@ -56,6 +56,12 @@ init() {
 	}
 
 	/* Set up color data */
+	glGenBuffers(1, &cbo);
+	glBindBuffer(GL_ARRAY_BUFFER, cbo);
+	glBufferData(GL_ARRAY_BUFFER, 3*NumPoints*sizeof(GLfloat),
+			NULL, GL_STATIC_DRAW);
+	colors = glMapBuffer(GL_ARRAY_BUFFER, GL_WRITE_ONLY);
+
 	if (colors) {
 		int i;
 		GLfloat *tmp = colors;
@@ -65,7 +71,7 @@ init() {
 			*tmp++ = 0.5; //((GLfloat)i) / NumPoints;
 		}
 		glEnableClientState(GL_COLOR_ARRAY);
-		glColorPointer(3, GL_FLOAT, 0, colors);
+		glColorPointer(3, GL_FLOAT, 0, BUFFER_OFFSET(0));
 	} else {
 		fprintf(stderr, "Unable to allocate memory for colors\n");
 		exit(EXIT_FAILURE);
