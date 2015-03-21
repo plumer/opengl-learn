@@ -2,13 +2,10 @@
 
 learning OpenGL
 
-## 2015.2.13:
+## 2015.3.21:
 
-Reaching chapter 3, which is about projection.
+Learning chapter 5
 
-Please someone tell me the difference between
-
-* model transformation
-* view transformation
-* projection transformation
+created ./icosahedron as the comprehensive example combining 
+as much as effects and techniques as possible
 
