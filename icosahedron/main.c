@@ -1,6 +1,8 @@
 #include <GL/gl.h>
 #include <GL/glut.h>
 #include <math.h>
+#include <stdio.h>
+#include <string.h>
 
 #define X .525731112119133606
 #define Z .850650808352039932
@@ -24,6 +26,8 @@ static GLuint tindices[20][3] = {
 	{3, 10, 7}, {10, 6, 7}, {6, 11, 7}, {6, 0, 11}, {6, 1, 0},
 	{10, 1, 6}, {11, 0, 9}, {2, 11, 9}, {5, 2, 9}, {11, 2, 7}
 };
+
+static GLfloat ndata[20][3];
 
 void drawAxes(GLfloat length) {
 	glColor3f(0.5, 0.5, 0.5);
@@ -51,15 +55,52 @@ void drawPlanes(GLfloat halfLength) {
 
 void
 init() {
+	int i;
+	GLfloat normal_vec[3];
+	GLfloat * vec1, *vec2, *vec3;
+	for (i = 0; i < 20; ++i) {
+		vec1 = vdata[tindices[i][0]];
+		vec2 = vdata[tindices[i][1]];
+		vec3 = vdata[tindices[i][2]];
+		normal_vec[0] = vec1[0] + vec2[0] + vec3[0];
+		normal_vec[1] = vec1[1] + vec2[1] + vec3[1];
+		normal_vec[2] = vec1[2] + vec2[2] + vec3[2];
+		normalize3(normal_vec);
+		memcpy(ndata[i], normal_vec, sizeof(normal_vec));
+//		printf("length for %dth normal vector: %f\n", i, length);
+//		printf("%f, %f, %f\n", ndata[i][0], ndata[i][1], ndata[i][2]);
+	}
+
+
 	glClearColor(0.0, 0.0, 0.0, 0.0);
-	glShadeModel(GL_FLAT);
+	glShadeModel(GL_SMOOTH);
 	glEnableClientState(GL_VERTEX_ARRAY);
 	glVertexPointer(3, GL_FLOAT, 0, vdata);
+
+	GLfloat mat_specular[] = {1.0, 1.0, 1.0, 1.0};
+	GLfloat mat_shineness[] = {40.0};
+	GLfloat mat_diffuse[] = {0.5, 1.0, 1.0, 1.0};
+	GLfloat light_position[]  = {1.0, 1.0, 1.0, 0.0};
+	GLfloat white_light[] = {1.0, 1.0, 1.0, 1.0};
+	GLfloat lmodel_ambient[] = {0.3, 0.3, 0.3, 1.0};
+	glMaterialfv(GL_FRONT, GL_SPECULAR, mat_specular);
+	glMaterialfv(GL_FRONT, GL_SHININESS, mat_shineness);
+	glMaterialfv(GL_FRONT, GL_DIFFUSE, mat_diffuse);
+
+	glLightfv(GL_LIGHT0, GL_POSITION, light_position);
+	glLightfv(GL_LIGHT0, GL_DIFFUSE, white_light);
+	glLightfv(GL_LIGHT0, GL_SPECULAR, white_light);
+	
+	glLightModelfv(GL_LIGHT_MODEL_AMBIENT, lmodel_ambient);
+
+	glEnable(GL_LIGHTING);
+	glEnable(GL_LIGHT0);
+	glEnable(GL_DEPTH_TEST);
 }
 
 void
 display() {
-	glClear(GL_COLOR_BUFFER_BIT);
+	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 	static int i;
 	
 	glColor3f(0.5, 1.0, 1.0);
@@ -67,16 +108,11 @@ display() {
 	gluLookAt(EYE_X * 3, EYE_Y * 3, EYE_Z * 3,
 			0.0, 0.0, 0.0,
 			0.0, 1.0, 0.0);
-	glBegin(GL_LINES);
 	for (i = 0; i < 20; i++) {
-		glVertex3fv(vdata[tindices[i][0]]);
-		glVertex3fv(vdata[tindices[i][1]]);
-		glVertex3fv(vdata[tindices[i][1]]);
-		glVertex3fv(vdata[tindices[i][2]]);
-		glVertex3fv(vdata[tindices[i][2]]);
-		glVertex3fv(vdata[tindices[i][0]]);
+		glNormal3fv(ndata[i]);
+		glDrawElements(GL_TRIANGLES, 3, GL_UNSIGNED_INT, tindices[i]);
 	}
-	glEnd();
+
 	
 	drawAxes(2.0);
 //	drawPlanes(1.5);
@@ -157,7 +193,7 @@ void keyboard(unsigned char key, int x, int y) {
 int
 main( int argc, char **argv ) {
 	glutInit(&argc, argv);
-	glutInitDisplayMode(GLUT_DOUBLE | GLUT_RGB);
+	glutInitDisplayMode(GLUT_DOUBLE | GLUT_RGB | GLUT_DEPTH);
 	glutInitWindowSize(400, 400);
 	glutInitWindowPosition(100, 100);
 	glutCreateWindow(argv[0]);
